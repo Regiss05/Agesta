@@ -53,17 +53,18 @@ const InputScreen = ({ navigation }) => {
           style={styles.picker}
           onValueChange={(itemValue) => setPrefix(itemValue)}
         >
+          <Picker.Item label="CGA" value="CGA" />
           <Picker.Item label="PWY" value="PWY" />
           <Picker.Item label="PFL" value="PFL" />
         </Picker>
         <TextInput
-          style={{ 
+          style={{
             borderColor: '#fff',
             borderWidth: 1,
             borderRadius: 5,
             color: 'white',
-            padding: 10, 
-            width: '70%',
+            padding: 10,
+            width: '65%',
           }}
           placeholder="Card Number"
           placeholderTextColor="gray"
@@ -86,10 +87,10 @@ const InputScreen = ({ navigation }) => {
         <Picker.Item label="EVASION+" value="EVASION+" />
         <Picker.Item label="TOUT CANAL+" value="TOUT CANAL+" />
         <Picker.Item label="ENGLISH PLUS" value="ENGLISH PLUS" />
-        <Picker.Item label="EVASION & ENGLISH+" value="EVASION & ENGLISH+" />
-        <Picker.Item label="ACCESS+ & ENGLISH+" value="ACCESS+ & ENGLISH+" />
-        <Picker.Item label="EVASION+ & ENGLISH+" value="EVASION+ & ENGLISH+" />
-        <Picker.Item label="ENGLISH+ & TOUT CANAL+" value="ENGLISH+ & TOUT CANAL+" />
+        <Picker.Item label="EVASION & ENGLISH PLUS" value="EVASION & ENGLISH PLUS" />
+        <Picker.Item label="ACCESS+ & ENGLISH PLUS" value="ACCESS+ & ENGLISH PLUS" />
+        <Picker.Item label="EVASION+ & ENGLISH PLUS" value="EVASION+ & ENGLISH PLUS" />
+        <Picker.Item label="ENGLISH+ & TOUT CANAL PLUS" value="ENGLISH+ & TOUT CANAL PLUS" />
         <Picker.Item label="ACCESS -> EVASION" value="ACCESS -> EVASION" />
         <Picker.Item label="ACCESS -> ACCESS+" value="ACCESS -> ACCESS+" />
         <Picker.Item label="ACCESS -> EVASION+" value="ACCESS -> EVASION+" />
