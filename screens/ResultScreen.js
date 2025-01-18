@@ -45,7 +45,7 @@ const ResultScreen = ({ route, navigation }) => {
             source={require('./../assets/agesta.png')}
           />
         </View>
-        <View style={{ backgroundColor: '#6d18bd', padding: 5, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
+        <View style={{ backgroundColor: '#676767', padding: 5, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
           <Image
             style={styles.wlogo}
             source={require('./../assets/whatsapp.png')}
