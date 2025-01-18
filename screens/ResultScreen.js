@@ -45,13 +45,20 @@ const ResultScreen = ({ route, navigation }) => {
             source={require('./../assets/agesta.png')}
           />
         </View>
-        <View style={{ backgroundColor: '#676767', padding: 5, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
+        <View style={{ backgroundColor: '#676767', padding: 5, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 15, paddingRight: 15 }}>
           <Image
-            style={styles.wlogo}
-            source={require('./../assets/whatsapp.png')}
+            style={styles.canallogo}
+            source={require('./../assets/canalplus.png')}
           />
-          <Text style={styles.labelnum}>+257 61 85 40 88</Text>
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
+            <Image
+              style={styles.wlogo}
+              source={require('./../assets/whatsapp.png')}
+            />
+            <Text style={styles.labelnum}>+257 61 85 40 88</Text>
+          </View>
         </View>
+
         {/* <Button title="Share Bill as Image" onPress={shareBillDetails} /> */}
       </ViewShot>
     </View>
@@ -96,9 +103,11 @@ const styles = StyleSheet.create({
   wlogo: {
     width: 25,
     height: 25,
-    // alignSelf: 'center',
-    // marginTop: -10,
-    // resizeMode: 'contain',
+  },
+  canallogo: {
+    width: 100,
+    height: 25,
+    // marginRight: 25,
   },
 });
 
