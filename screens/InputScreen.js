@@ -8,7 +8,7 @@ const InputScreen = ({ navigation }) => {
   const [duration, setDuration] = useState('');
   const [transactionDate, setTransactionDate] = useState('');
   const [transactionTime, setTransactionTime] = useState('');
-  const [prefix, setPrefix] = useState('PW'); // State for dropdown selection
+  const [prefix, setPrefix] = useState('CGA'); // State for dropdown selection
 
   const getCurrentDate = () => new Date().toISOString().split('T')[0];
   const getCurrentTime = () => new Date().toLocaleTimeString();
@@ -90,7 +90,7 @@ const InputScreen = ({ navigation }) => {
         <Picker.Item label="EVASION & ENGLISH PLUS" value="EVASION & ENGLISH PLUS" />
         <Picker.Item label="ACCESS+ & ENGLISH PLUS" value="ACCESS+ & ENGLISH PLUS" />
         <Picker.Item label="EVASION+ & ENGLISH PLUS" value="EVASION+ & ENGLISH PLUS" />
-        <Picker.Item label="ENGLISH+ & TOUT CANAL PLUS" value="ENGLISH+ & TOUT CANAL PLUS" />
+        <Picker.Item label="TOUT CANAL+ & ENGLISH PLUS" value="TOUT CANAL+ & ENGLISH PLUS" />
         <Picker.Item label="ACCESS -> EVASION" value="ACCESS -> EVASION" />
         <Picker.Item label="ACCESS -> ACCESS+" value="ACCESS -> ACCESS+" />
         <Picker.Item label="ACCESS -> EVASION+" value="ACCESS -> EVASION+" />
