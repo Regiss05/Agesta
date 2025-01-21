@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Button, Share, Image, Alert } from 'react-nativ
 import ViewShot from 'react-native-view-shot';
 
 const ResultScreen = ({ route, navigation }) => {
-  const { cardNumber, packageName, duration, prefix, transactionDate, transactionTime } = route.params;
+  const { cardNumber, packageName, duration, prefix, transactionDate, transactionTime, isChecked } = route.params;
   const viewShotRef = useRef(); // Ref for capturing the view
 
   const shareBillDetails = async () => {
@@ -11,7 +11,6 @@ const ResultScreen = ({ route, navigation }) => {
       const uri = await viewShotRef.current.capture(); // Capture the screenshot
 
       await Share.share({
-        // message: `Bill Details:\nCard Number: ${cardNumber}\nPackage Name: ${packageName}\nDuration/Month: ${duration} ${prefix}\nDate of Transaction: ${transactionDate}`,
         url: uri, // Share the captured screenshot
       });
 
@@ -35,8 +34,13 @@ const ResultScreen = ({ route, navigation }) => {
 
         <View style={[styles.rowContainer, { backgroundColor: '#363636', padding: 20 }]}>
           <View style={styles.detailsContainer}>
-            <Text style={styles.label}>Card No: {cardNumber}</Text>
-            <Text style={styles.label}>Package: {packageName}</Text>
+            <Text style={styles.label}>Card No : {cardNumber}</Text>
+            <Text style={styles.label}>Package : {packageName}</Text>
+            <Text style={styles.label}>Add          : 
+            <Text style={[styles.label, { color: isChecked ? '#faf000' : 'white' }]}>
+              {isChecked ? ' ENGLISH PLUS' : ' No'}
+            </Text>
+            </Text>
             <Text style={styles.label}>Duration/Month: {duration}</Text>
             <Text style={styles.label}>Date: {transactionDate} {transactionTime}</Text>
           </View>
@@ -45,6 +49,7 @@ const ResultScreen = ({ route, navigation }) => {
             source={require('./../assets/agesta.png')}
           />
         </View>
+
         <View style={{ backgroundColor: '#676767', padding: 5, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 15, paddingRight: 15 }}>
           <Image
             style={styles.canallogo}
@@ -107,7 +112,6 @@ const styles = StyleSheet.create({
   canallogo: {
     width: 100,
     height: 25,
-    // marginRight: 25,
   },
 });
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import Checkbox from 'expo-checkbox';
 
 const InputScreen = ({ navigation }) => {
   const [cardNumber, setCardNumber] = useState('');
@@ -9,6 +10,7 @@ const InputScreen = ({ navigation }) => {
   const [transactionDate, setTransactionDate] = useState('');
   const [transactionTime, setTransactionTime] = useState('');
   const [prefix, setPrefix] = useState('CGA'); // State for dropdown selection
+  const [isChecked, setChecked] = useState(false);
 
   const getCurrentDate = () => new Date().toISOString().split('T')[0];
   const getCurrentTime = () => new Date().toLocaleTimeString();
@@ -34,6 +36,7 @@ const InputScreen = ({ navigation }) => {
       prefix,
       transactionDate,
       transactionTime,
+      isChecked,
     });
   };
 
@@ -87,10 +90,6 @@ const InputScreen = ({ navigation }) => {
         <Picker.Item label="EVASION+" value="EVASION+" />
         <Picker.Item label="TOUT CANAL+" value="TOUT CANAL+" />
         <Picker.Item label="ENGLISH PLUS" value="ENGLISH PLUS" />
-        <Picker.Item label="EVASION & ENGLISH PLUS" value="EVASION & ENGLISH PLUS" />
-        <Picker.Item label="ACCESS+ & ENGLISH PLUS" value="ACCESS+ & ENGLISH PLUS" />
-        <Picker.Item label="EVASION+ & ENGLISH PLUS" value="EVASION+ & ENGLISH PLUS" />
-        <Picker.Item label="TOUT CANAL+ & ENGLISH PLUS" value="TOUT CANAL+ & ENGLISH PLUS" />
         <Picker.Item label="ACCESS -> EVASION" value="ACCESS -> EVASION" />
         <Picker.Item label="ACCESS -> ACCESS+" value="ACCESS -> ACCESS+" />
         <Picker.Item label="ACCESS -> EVASION+" value="ACCESS -> EVASION+" />
@@ -102,6 +101,18 @@ const InputScreen = ({ navigation }) => {
         <Picker.Item label="ACCESS+ -> TOUT CANAL+" value="ACCESS+ -> TOUT CANAL+" />
         <Picker.Item label="EVASION+ -> TOUT CANAL+" value="EVASION+ -> TOUT CANAL+" />
       </Picker>
+
+      <View style={styles.container12}>
+        <View style={styles.section}>
+          <Checkbox
+            style={styles.checkbox}
+            value={isChecked}
+            onValueChange={setChecked}
+            color={isChecked ? '#f98935' : undefined}
+          />
+          <Text style={styles.paragraph}>{isChecked ? 'ADDED' : 'ADD ENGLISH PLUS'}</Text>
+        </View>
+      </View>
 
       <TextInput
         style={styles.input}
@@ -190,6 +201,22 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
+
+  container12: {
+    marginVertical: 10,
+  },
+  section: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  paragraph: {
+    fontSize: 15,
+    color: 'white',
+  },
+  checkbox: {
+    margin: 8,
+  },
+
 });
 
 export default InputScreen;
