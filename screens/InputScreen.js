@@ -42,6 +42,7 @@ const InputScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={{ color: '#f98935', fontWeight: 'bold', position: 'absolute', top: 50, left: '50%', transform: [{ translateX: -50 }] }}>REGISS MUKUBIZA</Text>
       <Image
         style={styles.logo}
         source={require('./../assets/agesta.png')}

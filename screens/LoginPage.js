@@ -26,12 +26,12 @@ const LoginPage = ({ route, navigation }) => {
           <Text style={styles.agestaText}>THANK YOU FOR CHOOSING <Text style={{ color: '#EF893D', fontWeight: 'bold' }}>US</Text></Text>
           <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'center' }}>
             <Image
-              style={{ width: 50, height: 40, resizeMode: 'contain', marginTop: -8 }}
-              source={require('./../assets/dstv.webp')}
-            />
-            <Image
               style={{ width: 60, height: 30, resizeMode: 'contain', backgroundColor: 'black' }}
               source={require('./../assets/canalplus.png')}
+            />
+            <Image
+              style={{ width: 50, height: 40, resizeMode: 'contain', marginTop: -8 }}
+              source={require('./../assets/dstv.webp')}
             />
             <Image
               style={{ width: 80, height: 29, resizeMode: 'contain', backgroundColor: 'white' }}
@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     lineHeight: 35,
     fontWeight: "black",
     marginBottom: 10,
+    textAlign: 'center',
   },
   input: {
     borderColor: '#fff',
