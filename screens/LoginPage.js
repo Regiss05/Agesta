@@ -24,7 +24,25 @@ const LoginPage = ({ route, navigation }) => {
         </View>
         <View style={styles.login}>
           <Text style={styles.agestaText}>THANK YOU FOR CHOOSING <Text style={{ color: '#EF893D', fontWeight: 'bold' }}>US</Text></Text>
-          <Text style={{ color: '#C4C4C4', fontSize: 13, marginVertical: 25 }}>Your subscription ensures access to the best in entertainment,
+          <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'center' }}>
+            <Image
+              style={{ width: 50, height: 40, resizeMode: 'contain', marginTop: -8 }}
+              source={require('./../assets/dstv.webp')}
+            />
+            <Image
+              style={{ width: 60, height: 30, resizeMode: 'contain', backgroundColor: 'black' }}
+              source={require('./../assets/canalplus.png')}
+            />
+            <Image
+              style={{ width: 80, height: 29, resizeMode: 'contain', backgroundColor: 'white' }}
+              source={require('./../assets/startimes.png')}
+            />
+            <Image
+              style={{ width: 80, height: 29, backgroundColor: 'white' }}
+              source={require('./../assets/1xbet.png')}
+            />
+          </View>
+          <Text style={{ color: '#C4C4C4', fontSize: 13, marginVertical: 15 }}>Your subscription ensures access to the best in entertainment,
             sports, movies, and more. We appreciate your support
             and are excited to bring you a world of content right
             at your fingertips. If you have any questions or need assistance,
@@ -87,13 +105,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 100,
     resizeMode: 'contain',
-    marginBottom: 50,
+    marginBottom: 30,
   },
   agestaText: {
     color: 'white',
     fontSize: 22,
     lineHeight: 35,
     fontWeight: "black",
+    marginBottom: 10,
   },
   input: {
     borderColor: '#fff',
@@ -125,6 +144,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopLeftRadius: 8,
     borderBottomLeftRadius: 8,
+  },
+  buttonText: {
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
 

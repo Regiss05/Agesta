@@ -27,6 +27,7 @@ const ResultScreen = ({ route, navigation }) => {
         options={{ format: 'jpg', quality: 0.9 }}
         style={styles.container}
       >
+        <View style={{ backgroundColor: '#d6742b', padding: 5, height: 50 }} />
         <View style={{ backgroundColor: '#f98935', padding: 5 }}>
           <Text style={styles.header}>AFRICAN GENIUS STAFF / AGESTA</Text>
           <Text style={styles.header}>CANAL PAYMENT - {prefix}</Text>
@@ -36,10 +37,10 @@ const ResultScreen = ({ route, navigation }) => {
           <View style={styles.detailsContainer}>
             <Text style={styles.label}>Card No : {cardNumber}</Text>
             <Text style={styles.label}>Package : {packageName}</Text>
-            <Text style={styles.label}>Add          : 
-            <Text style={[styles.label, { color: isChecked ? '#faf000' : 'white' }]}>
-              {isChecked ? ' ENGLISH PLUS' : ' No'}
-            </Text>
+            <Text style={styles.label}>Add          :
+              <Text style={[styles.label, { color: isChecked ? '#faf000' : 'white' }]}>
+                {isChecked ? ' ENGLISH PLUS' : ' No'}
+              </Text>
             </Text>
             <Text style={styles.label}>Duration/Month: {duration}</Text>
             <Text style={styles.label}>Date: {transactionDate} {transactionTime}</Text>
@@ -50,17 +51,18 @@ const ResultScreen = ({ route, navigation }) => {
           />
         </View>
 
-        <View style={{ backgroundColor: '#676767', padding: 5, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 15, paddingRight: 15 }}>
+        <View style={{ backgroundColor: '#212121', padding: 5, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 15, paddingRight: 15 }}>
           <Image
             style={styles.canallogo}
             source={require('./../assets/canalplus.png')}
           />
           <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
+            <Text style={styles.labelnum}>CONTACT US </Text>
             <Image
               style={styles.wlogo}
               source={require('./../assets/whatsapp.png')}
             />
-            <Text style={styles.labelnum}>+257 61 85 40 88</Text>
+            <Text style={styles.labelnum}>+257 61854088</Text>
           </View>
         </View>
 
