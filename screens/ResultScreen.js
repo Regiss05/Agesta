@@ -66,7 +66,7 @@ const ResultScreen = ({ route, navigation }) => {
           </View>
         </View>
 
-        {/* <Button title="Share Bill as Image" onPress={shareBillDetails} /> */}
+        <Button title="Share Bill as Image" onPress={shareBillDetails} />
       </ViewShot>
     </View>
   );

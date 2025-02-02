@@ -42,7 +42,13 @@ const InputScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ color: '#f98935', fontWeight: 'bold', position: 'absolute', top: 50, left: '50%', transform: [{ translateX: -50 }] }}>REGISS MUKUBIZA</Text>
+      <View style={{ flexDirection: 'row', position: 'absolute', top: 50, left: '47%' }}>
+        <Text style={{ color: '#f98935', fontWeight: 'bold' }}>REGISS</Text>
+        <Image
+          style={{ width: 20, height: 20  }}
+          source={require('./../assets/down.png')}
+        />
+      </View>
       <Image
         style={styles.logo}
         source={require('./../assets/agesta.png')}

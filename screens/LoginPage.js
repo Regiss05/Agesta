@@ -1,13 +1,45 @@
-import React, { useRef } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import ViewShot from 'react-native-view-shot';
+import axios from 'axios';
 
 const LoginPage = ({ route, navigation }) => {
   const viewShotRef = useRef();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSignup, setIsSignup] = useState(false);
 
-  const handleSubmit = () => {
-    navigation.navigate('InputScreen');
+  const API_URL = 'http://192.168.0.255:5000/api/auth'; // Replace with your actual IP
+
+
+  const handleSubmit = async () => {
+    const endpoint = isSignup ? '/signup' : '/login';
+    const url = `${API_URL}${endpoint}`;
+  
+    try {
+      const response = await axios.post(url, { username, password });
+  
+      if (isSignup) {
+        Alert.alert('Success', 'User registered successfully');
+        setIsSignup(false);
+      } else {
+        if (response.data.token) {
+          Alert.alert('Success', 'Login successful');
+          
+          // Save token in AsyncStorage (for authentication)
+          await AsyncStorage.setItem('token', response.data.token);
+  
+          navigation.navigate('InputScreen'); // Navigate after login
+        } else {
+          Alert.alert('Error', 'Invalid credentials');
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Alert.alert('Error', error.response?.data?.message || 'An error occurred');
+    }
   };
+  
 
   return (
     <View style={{ backgroundColor: '#363636', flex: 1 }}>
@@ -42,7 +74,7 @@ const LoginPage = ({ route, navigation }) => {
               source={require('./../assets/1xbet.png')}
             />
           </View>
-          <Text style={{ color: '#C4C4C4', fontSize: 13, marginVertical: 15 }}>Your subscription ensures access to the best in entertainment,
+          <Text style={{ color: '#C4C4C4', fontSize: 13, marginVertical: 15, textAlign: 'center' }}>Your subscription ensures access to the best in entertainment,
             sports, movies, and more. We appreciate your support
             and are excited to bring you a world of content right
             at your fingertips. If you have any questions or need assistance,
@@ -59,8 +91,8 @@ const LoginPage = ({ route, navigation }) => {
             style={styles.input}
             placeholder="User's Name"
             placeholderTextColor="gray"
-          // value={duration}
-          // onChangeText={setDuration}
+            value={username}
+            onChangeText={setUsername}
           />
         </View>
 
@@ -75,13 +107,24 @@ const LoginPage = ({ route, navigation }) => {
             style={styles.input}
             placeholder="Password"
             placeholderTextColor="gray"
-          // value={duration}
-          // onChangeText={setDuration}
+            value={password}
+            onChangeText={setPassword}
           />
         </View>
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        {/* <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity> */}
+
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>{isSignup ? 'Sign Up' : 'Login'}</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setIsSignup(!isSignup)}>
+        <Text style={{ color: '#C4C4C4', textAlign: 'center', marginTop: 10 }}>
+          {isSignup ? 'Already have an account? Login' : 'Don’t have an account? Sign Up'}
+        </Text>
+      </TouchableOpacity>
+
       </ViewShot>
     </View>
   );
