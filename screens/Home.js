@@ -39,7 +39,7 @@ const Home = ({ route, navigation }) => {
     <>
       <View style={{ backgroundColor: '#363636', width: 'full', height: '15%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
         {/* <View style={{ backgroundColor: '#eb8e49', width: 'full', height: '20%' }}> */}
-        <View>
+        <View style={{ marginTop: 50 }}>
           {/* Dropdown Button */}
           <TouchableOpacity
             style={{ flexDirection: 'row', alignItems: 'center' }}
@@ -78,45 +78,21 @@ const Home = ({ route, navigation }) => {
         <View>
           <Text style={{ color: 'white', marginBottom: 10 }}>Services</Text>
           <View style={styles.mensect}>
-            <Image
-              style={styles.canal}
-              source={require('./../assets/canalplus.png')}
-            />
-            {/* <TouchableOpacity
-              style={{
-                backgroundColor: '#f98935',
-                padding: 10,
-                borderRadius: 5,
-                marginTop: 5,
-              }}
-              onPress={canalplusSend}
-            >
-              <View>
-                
-              </View>
-              <Text style={{ color: 'white', fontWeight: 'bold' }}>canal+</Text>
-            </TouchableOpacity> */}
-            {/* <TouchableOpacity
-              style={{height: 10, width: '50%'}}
-              onPress={canalplusSend}
-            >
-              <Image style={styles.canal}
-                source={require('./../assets/canalplus.png')} />
-            </TouchableOpacity> */}
-            <Image
-              style={styles.startime}
-              source={require('./../assets/startimes.png')}
-            />
+            <TouchableOpacity style={styles.logoButton} onPress={() => navigation.navigate('InputScreen')}>
+              <Image style={styles.canal} source={require('./../assets/canalplus.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.logoButton} onPress={() => navigation.navigate('GameScreen')}>
+              <Image style={styles.startime} source={require('./../assets/startimes.png')} />
+            </TouchableOpacity>
           </View>
+
           <View style={styles.mensect}>
-            <Image
-              style={styles.dstv}
-              source={require('./../assets/dstv.webp')}
-            />
-            <Image
-              style={styles.bet}
-              source={require('./../assets/1xbet.png')}
-            />
+            <TouchableOpacity style={styles.logoButton} onPress={() => navigation.navigate('GameScreen')}>
+              <Image style={styles.dstv} source={require('./../assets/dstv.webp')} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.logoButton} onPress={() => navigation.navigate('GameScreen')}>
+              <Image style={styles.bet} source={require('./../assets/1xbet.png')} />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -133,33 +109,36 @@ const styles = StyleSheet.create({
   },
   mensect: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   canal: {
-    width: '50%',
+    width: '100%',
     height: 100,
     resizeMode: 'contain',
     backgroundColor: 'black',
   },
   startime: {
-    width: '50%',
+    width: '100%',
     height: 100,
     resizeMode: 'contain',
     backgroundColor: 'white',
   },
   dstv: {
-    width: '50%',
+    width: '100%',
     height: 100,
     resizeMode: 'contain',
     backgroundColor: '#0095da',
   },
   bet: {
-    width: '50%',
+    width: '100%',
     height: 100,
     resizeMode: 'contain',
     backgroundColor: '#195685',
-  }
+  },
+  logoButton: {
+    width: '50%',
+  },
 });
 
 export default Home;
