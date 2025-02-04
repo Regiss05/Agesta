@@ -31,7 +31,7 @@ const LoginPage = ({ route, navigation }) => {
         await AsyncStorage.setItem('user', JSON.stringify(user));
   
         Alert.alert('Success', 'Login successful!');
-        navigation.navigate('InputScreen'); // Change 'Home' to your actual home screen
+        navigation.navigate('Home'); // Change 'Home' to your actual home screen
       }
     } catch (error) {
       Alert.alert('Error', error.response?.data?.message || 'Something went wrong');
