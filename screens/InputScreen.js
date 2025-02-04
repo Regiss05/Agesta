@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, Button } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, Button, ActivityIndicator, Platform } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Checkbox from 'expo-checkbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const InputScreen = ({ navigation }) => {
+  const [userName, setUserName] = useState(null); // Null means loading
   const [cardNumber, setCardNumber] = useState('');
   const [packageName, setPackageName] = useState('');
   const [duration, setDuration] = useState('');
@@ -12,6 +13,8 @@ const InputScreen = ({ navigation }) => {
   const [transactionTime, setTransactionTime] = useState('');
   const [prefix, setPrefix] = useState('CGA'); // State for dropdown selection
   const [isChecked, setChecked] = useState(false);
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
+
   // const { logout } = useContext(AuthContext);
 
   const getCurrentDate = () => new Date().toISOString().split('T')[0];
@@ -28,6 +31,25 @@ const InputScreen = ({ navigation }) => {
 
     // Cleanup interval on component unmount
     return () => clearInterval(timeInterval);
+  }, []);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('user');
+        if (userData) {
+          const user = JSON.parse(userData);
+          setUserName(user.username || '');
+        } else {
+          setUserName('Guest'); // Default if no user found
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        setUserName('Guest');
+      }
+    };
+
+    fetchUser();
   }, []);
 
   const handleLogout = async () => {
@@ -50,12 +72,34 @@ const InputScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row', position: 'absolute', top: 50, left: '47%' }}>
-        <Text style={{ color: '#f98935', fontWeight: 'bold' }}>REGISS</Text>
-        <Image
-          style={{ width: 20, height: 20  }}
-          source={require('./../assets/down.png')}
-        />
+      <View style={{ position: 'absolute', top: 50, left: '45%', alignItems: 'center' }}>
+        {/* Dropdown Button */}
+        <TouchableOpacity
+          style={{ flexDirection: 'row', alignItems: 'center' }}
+          onPress={() => setDropdownVisible(!isDropdownVisible)}
+        >
+          {userName === null ? (
+            <ActivityIndicator size="small" color={Platform.OS === 'ios' ? 'gray' : '#f98935'} />
+          ) : (
+            <Text style={{ color: '#f98935', fontWeight: 'bold' }}>{userName}</Text>
+          )}
+          <Image style={{ width: 20, height: 20, marginLeft: 5 }} source={require('./../assets/down.png')} />
+        </TouchableOpacity>
+
+        {/* Dropdown Menu */}
+        {isDropdownVisible && (
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#f98935',
+              padding: 10,
+              borderRadius: 5,
+              marginTop: 5,
+            }}
+            onPress={handleLogout}
+          >
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>Logout</Text>
+          </TouchableOpacity>
+        )}
       </View>
       <Image
         style={styles.logo}
@@ -63,8 +107,6 @@ const InputScreen = ({ navigation }) => {
       />
       <Text style={styles.title}>AFRICAN GENIUS STAFF / AGESTA</Text>
       <Text style={styles.subtitle}>CANAL + PAYMENT</Text>
-      <Button title="Logout" onPress={handleLogout} />
-
 
       {/* Card Number Input with Dropdown */}
       <View style={styles.row}>
