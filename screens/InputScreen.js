@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Checkbox from 'expo-checkbox';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const InputScreen = ({ navigation }) => {
   const [cardNumber, setCardNumber] = useState('');
@@ -11,6 +12,7 @@ const InputScreen = ({ navigation }) => {
   const [transactionTime, setTransactionTime] = useState('');
   const [prefix, setPrefix] = useState('CGA'); // State for dropdown selection
   const [isChecked, setChecked] = useState(false);
+  // const { logout } = useContext(AuthContext);
 
   const getCurrentDate = () => new Date().toISOString().split('T')[0];
   const getCurrentTime = () => new Date().toLocaleTimeString();
@@ -27,6 +29,12 @@ const InputScreen = ({ navigation }) => {
     // Cleanup interval on component unmount
     return () => clearInterval(timeInterval);
   }, []);
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem('user');
+    navigation.replace('LoginPage'); // Navigate back to login screen
+  };
 
   const handleSubmit = () => {
     navigation.navigate('ResultScreen', {
@@ -55,6 +63,8 @@ const InputScreen = ({ navigation }) => {
       />
       <Text style={styles.title}>AFRICAN GENIUS STAFF / AGESTA</Text>
       <Text style={styles.subtitle}>CANAL + PAYMENT</Text>
+      <Button title="Logout" onPress={handleLogout} />
+
 
       {/* Card Number Input with Dropdown */}
       <View style={styles.row}>

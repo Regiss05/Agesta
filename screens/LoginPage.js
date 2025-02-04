@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import ViewShot from 'react-native-view-shot';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginPage = ({ route, navigation }) => {
   const viewShotRef = useRef();
@@ -9,36 +10,34 @@ const LoginPage = ({ route, navigation }) => {
   const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false);
 
-  const API_URL = 'http://192.168.0.255:5000/api/auth'; // Replace with your actual IP
-
 
   const handleSubmit = async () => {
-    const endpoint = isSignup ? '/signup' : '/login';
-    const url = `${API_URL}${endpoint}`;
+    const endpoint = isSignup ? 'http://localhost:5000/api/auth/signup' : 'http://localhost:5000/api/auth/login';
+  
+    if (!username || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
   
     try {
-      const response = await axios.post(url, { username, password });
+      const response = await axios.post(endpoint, { username, password });
   
       if (isSignup) {
-        Alert.alert('Success', 'User registered successfully');
+        Alert.alert('Success', 'Account created successfully. You can now log in.');
         setIsSignup(false);
       } else {
-        if (response.data.token) {
-          Alert.alert('Success', 'Login successful');
-          
-          // Save token in AsyncStorage (for authentication)
-          await AsyncStorage.setItem('token', response.data.token);
+        const { token, user } = response.data;
+        await AsyncStorage.setItem('token', token);
+        await AsyncStorage.setItem('user', JSON.stringify(user));
   
-          navigation.navigate('InputScreen'); // Navigate after login
-        } else {
-          Alert.alert('Error', 'Invalid credentials');
-        }
+        Alert.alert('Success', 'Login successful!');
+        navigation.navigate('InputScreen'); // Change 'Home' to your actual home screen
       }
     } catch (error) {
-      console.error('Error:', error);
-      Alert.alert('Error', error.response?.data?.message || 'An error occurred');
+      Alert.alert('Error', error.response?.data?.message || 'Something went wrong');
     }
   };
+  
   
 
   return (
@@ -109,22 +108,19 @@ const LoginPage = ({ route, navigation }) => {
             placeholderTextColor="gray"
             value={password}
             onChangeText={setPassword}
+            secureTextEntry
           />
         </View>
-        {/* <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity> */}
 
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.buttonText}>{isSignup ? 'Sign Up' : 'Login'}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => setIsSignup(!isSignup)}>
-        <Text style={{ color: '#C4C4C4', textAlign: 'center', marginTop: 10 }}>
-          {isSignup ? 'Already have an account? Login' : 'Don’t have an account? Sign Up'}
-        </Text>
-      </TouchableOpacity>
-
+          <Text style={{ color: '#C4C4C4', textAlign: 'center', marginTop: 10 }}>
+            {isSignup ? 'Already have an account? Login' : 'Don’t have an account? Sign Up'}
+          </Text>
+        </TouchableOpacity>
       </ViewShot>
     </View>
   );
