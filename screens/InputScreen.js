@@ -15,6 +15,9 @@ const InputScreen = ({ navigation }) => {
   const [isChecked, setChecked] = useState(false);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
 
+  const [recipientUsername, setRecipientUsername] = useState('');
+  const [amount, setAmount] = useState('');
+
   // const { logout } = useContext(AuthContext);
 
   const getCurrentDate = () => new Date().toISOString().split('T')[0];
