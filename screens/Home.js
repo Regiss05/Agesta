@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -18,11 +18,11 @@ const Home = ({ route, navigation }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [amountToSend, setAmountToSend] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const [amountSent, setAmountSent] = useState(0);
-
+  const [balance, setBalance] = useState(null);
   const [recipientUsername, setRecipientUsername] = useState('');
   const [userList, setUserList] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
+  const [transferHistory, setTransferHistory] = useState([]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -65,7 +65,52 @@ const Home = ({ route, navigation }) => {
         setLoadingUsers(false);
       }
     };
+
     fetchAllUsers();
+  }, []);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        const response = await fetch('http://localhost:5000/api/balance', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setBalance(data.balance);
+        } else {
+          setBalance(0);
+        }
+      } catch (error) {
+        console.error('Error fetching balance:', error);
+        setBalance(0);
+      }
+    };
+
+    fetchBalance();
+  }, []);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        const response = await fetch('http://localhost:5000/api/transfer/history', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setTransferHistory(data);
+        }
+      } catch (err) {
+        console.error('Failed to load history', err);
+      }
+    };
+
+    fetchHistory();
   }, []);
 
   const handleLogout = async () => {
@@ -89,7 +134,7 @@ const Home = ({ route, navigation }) => {
 
     try {
       const token = await AsyncStorage.getItem('token');
-      const response = await fetch('http://192.168.0.102:5000/api/transfer', {
+      const response = await fetch('http://localhost:5000/api/transfer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +154,7 @@ const Home = ({ route, navigation }) => {
         Alert.alert('Success', 'Amount sent successfully!');
         setRecipientUsername('');
         setAmountToSend('');
-        setAmountSent(prev => prev + Number(amountToSend));
+        setBalance(prev => prev - Number(amountToSend));
       }
     } catch (error) {
       console.error('Error sending amount:', error);
@@ -121,17 +166,7 @@ const Home = ({ route, navigation }) => {
 
   return (
     <>
-      {/* Header */}
-      <View
-        style={{
-          backgroundColor: '#363636',
-          width: 'full',
-          height: '15%',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <View style={styles.header}>
         <View style={{ marginTop: 50 }}>
           <TouchableOpacity
             style={{ flexDirection: 'row', alignItems: 'center' }}
@@ -143,16 +178,7 @@ const Home = ({ route, navigation }) => {
                 color={Platform.OS === 'ios' ? 'gray' : '#f98935'}
               />
             ) : (
-              <Text
-                style={{
-                  color: '#f98935',
-                  fontWeight: 'bold',
-                  fontSize: 18,
-                  textTransform: 'uppercase',
-                }}
-              >
-                @{userName}
-              </Text>
+              <Text style={styles.username}>@{userName}</Text>
             )}
             <Image
               style={{ width: 20, height: 20, marginLeft: 5 }}
@@ -162,12 +188,7 @@ const Home = ({ route, navigation }) => {
 
           {isDropdownVisible && (
             <TouchableOpacity
-              style={{
-                backgroundColor: '#f98935',
-                padding: 10,
-                borderRadius: 5,
-                marginTop: 5,
-              }}
+              style={styles.logoutBtn}
               onPress={handleLogout}
             >
               <Text style={{ color: 'white', fontWeight: 'bold' }}>Logout</Text>
@@ -175,10 +196,33 @@ const Home = ({ route, navigation }) => {
           )}
         </View>
       </View>
+      <Text style={{ color: 'white', marginTop: 20, marginBottom: 10 }}>Transfer History</Text>
+      <View style={{ maxHeight: 200 }}>
+        {transferHistory.length === 0 ? (
+          <Text style={{ color: 'gray' }}>No transfers yet.</Text>
+        ) : (
+          [...transferHistory].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).map((t, index) => (
+            <View key={index} style={{ padding: 10, backgroundColor: '#222', marginBottom: 5, borderRadius: 5 }}>
+              <Text style={{ color: 'white' }}>
+                Sent <Text style={{ fontWeight: 'bold' }}>{t.amount}</Text> to <Text style={{ color: '#f98935' }}>@{t.recipient.username}</Text>
+              </Text>
+              <Text style={{ color: 'gray', fontSize: 12 }}>{new Date(t.timestamp).toLocaleString()}</Text>
+            </View>
+          ))
+        )}
+      </View>
 
-      {/* Send Amount */}
-      <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
-        <Text style={{ color: 'white', marginBottom: 5 }}>Send Amount</Text>
+
+      {/* Send Amount Section */}
+      <View style={{ paddingHorizontal: 20, backgroundColor: '#363636' }}>
+        <Text style={{ color: 'black', marginBottom: 5 }}>Send Amount</Text>
+
+        <View style={styles.sectrw}>
+          <Text style={{ color: 'white' }}>Money</Text>
+          <Text style={styles.balanceText}>
+            {balance === null ? '...' : balance}
+          </Text>
+        </View>
 
         <View style={{ marginBottom: 10, backgroundColor: '#222', borderRadius: 5 }}>
           {loadingUsers ? (
@@ -203,14 +247,7 @@ const Home = ({ route, navigation }) => {
         </View>
 
         <TextInput
-          style={{
-            borderColor: '#fff',
-            borderWidth: 1,
-            borderRadius: 5,
-            color: 'white',
-            padding: 10,
-            marginBottom: 10,
-          }}
+          style={styles.input}
           placeholder="Amount"
           placeholderTextColor="gray"
           keyboardType="numeric"
@@ -218,13 +255,14 @@ const Home = ({ route, navigation }) => {
           onChangeText={setAmountToSend}
         />
 
+        {recipientUsername ? (
+          <Text style={styles.recipientText}>
+            Sending to: <Text style={{ fontWeight: 'bold' }}>@{recipientUsername}</Text>
+          </Text>
+        ) : null}
+
         <TouchableOpacity
-          style={{
-            backgroundColor: '#f98935',
-            padding: 15,
-            borderRadius: 5,
-            alignItems: 'center',
-          }}
+          style={styles.sendBtn}
           onPress={handleSendAmount}
           disabled={isSending}
         >
@@ -235,77 +273,30 @@ const Home = ({ route, navigation }) => {
           )}
         </TouchableOpacity>
       </View>
-
-      {/* Dashboard */}
-      <View style={{ backgroundColor: '#363636', flex: 1, padding: 20 }}>
-        <Text style={{ color: 'white', marginBottom: 10 }}>Dashboard</Text>
-        <View style={styles.sectrw}>
-          <Text style={{ textAlign: 'center', color: 'white' }}>Money</Text>
-          <Text
-            style={{
-              textAlign: 'center',
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: 50,
-            }}
-          >
-            {amountSent}
-          </Text>
-        </View>
-        <View>
-          <Text style={{ color: 'white', marginBottom: 10 }}>Services</Text>
-          <View style={styles.mensect}>
-            <TouchableOpacity
-              style={styles.logoButton}
-              onPress={() => navigation.navigate('InputScreen')}
-            >
-              <Image
-                style={styles.canal}
-                source={require('./../assets/canalplus.png')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.logoButton}
-              onPress={() => navigation.navigate('GameScreen')}
-            >
-              <Image
-                style={styles.startime}
-                source={require('./../assets/startimes.png')}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.mensect}>
-            <TouchableOpacity
-              style={styles.logoButton}
-              onPress={() => navigation.navigate('GameScreen')}
-            >
-              <Image
-                style={styles.dstv}
-                source={require('./../assets/dstv.webp')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.logoButton}
-              onPress={() => navigation.navigate('GameScreen')}
-            >
-              <Image
-                style={styles.bet}
-                source={require('./../assets/1xbet.png')}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  sectrw: {
+  header: {
+    backgroundColor: '#363636',
     width: 'full',
-    backgroundColor: '#eb8e49',
-    padding: 30,
-    marginBottom: 5,
+    height: '15%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  username: {
+    color: '#f98935',
+    fontWeight: 'bold',
+    fontSize: 18,
+    textTransform: 'uppercase',
+  },
+  logoutBtn: {
+    backgroundColor: '#f98935',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 5,
   },
   mensect: {
     flexDirection: 'row',
@@ -338,6 +329,36 @@ const styles = StyleSheet.create({
   },
   logoButton: {
     width: '50%',
+  },
+  sectrw: {
+    backgroundColor: '#444',
+    padding: 20,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  balanceText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 30,
+    textAlign: 'center',
+  },
+  input: {
+    borderColor: '#fff',
+    borderWidth: 1,
+    borderRadius: 5,
+    color: 'white',
+    padding: 10,
+    marginBottom: 5,
+  },
+  recipientText: {
+    color: 'white',
+    marginBottom: 10,
+  },
+  sendBtn: {
+    backgroundColor: '#f98935',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
   },
 });
 
