@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '@env';
 import {
   View,
   Text,
@@ -25,28 +26,36 @@ const Home = ({ route, navigation }) => {
   const [transferHistory, setTransferHistory] = useState([]);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchBalance = async () => {
       try {
-        const userData = await AsyncStorage.getItem('user');
-        if (userData) {
-          const user = JSON.parse(userData);
-          setUserName(user.username || '');
+        const token = await AsyncStorage.getItem('token');
+        const response = await fetch(`${API_URL}/api/balance`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+        console.log('Balance API response:', data);  // ✅ Confirm here
+        if (response.ok) {
+          setBalance(data.balance);
         } else {
-          setUserName('Guest');
+          setBalance(0);
         }
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
-        setUserName('Guest');
+        console.error('Error fetching balance:', error);
+        setBalance(0);
       }
     };
-    fetchUser();
+
+    fetchBalance();
   }, []);
 
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/users/all', {
+        const response = await fetch(`${API_URL}/api/users/all`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -73,7 +82,7 @@ const Home = ({ route, navigation }) => {
     const fetchBalance = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/balance', {
+        const response = await fetch(`${API_URL}/api/balance`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -98,7 +107,7 @@ const Home = ({ route, navigation }) => {
     const fetchHistory = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/transfer/history', {
+        const response = await fetch(`${API_URL}/api/transfer/history`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.ok) {
@@ -134,7 +143,7 @@ const Home = ({ route, navigation }) => {
 
     try {
       const token = await AsyncStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/transfer', {
+      const response = await fetch(`${API_URL}/api/transfer`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -196,27 +205,7 @@ const Home = ({ route, navigation }) => {
           )}
         </View>
       </View>
-      <Text style={{ color: 'white', marginTop: 20, marginBottom: 10 }}>Transfer History</Text>
-      <View style={{ maxHeight: 200 }}>
-        {transferHistory.length === 0 ? (
-          <Text style={{ color: 'gray' }}>No transfers yet.</Text>
-        ) : (
-          [...transferHistory].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).map((t, index) => (
-            <View key={index} style={{ padding: 10, backgroundColor: '#222', marginBottom: 5, borderRadius: 5 }}>
-              <Text style={{ color: 'white' }}>
-                Sent <Text style={{ fontWeight: 'bold' }}>{t.amount}</Text> to <Text style={{ color: '#f98935' }}>@{t.recipient.username}</Text>
-              </Text>
-              <Text style={{ color: 'gray', fontSize: 12 }}>{new Date(t.timestamp).toLocaleString()}</Text>
-            </View>
-          ))
-        )}
-      </View>
-
-
-      {/* Send Amount Section */}
       <View style={{ paddingHorizontal: 20, backgroundColor: '#363636' }}>
-        <Text style={{ color: 'black', marginBottom: 5 }}>Send Amount</Text>
-
         <View style={styles.sectrw}>
           <Text style={{ color: 'white' }}>Money</Text>
           <Text style={styles.balanceText}>
@@ -272,6 +261,23 @@ const Home = ({ route, navigation }) => {
             <Text style={{ color: 'white', fontWeight: 'bold' }}>Send</Text>
           )}
         </TouchableOpacity>
+
+        <Text style={{ color: 'white', marginTop: 20, marginBottom: 10 }}>Transfer History</Text>
+        <View style={{ maxHeight: 200 }}>
+          {transferHistory.length === 0 ? (
+            <Text style={{ color: 'gray' }}>No transfers yet.</Text>
+          ) : (
+            [...transferHistory].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).map((t, index) => (
+              <View key={index} style={{ padding: 10, backgroundColor: '#222', marginBottom: 5, borderRadius: 5 }}>
+                <Text style={{ color: 'white' }}>
+                  Sent <Text style={{ fontWeight: 'bold' }}>{t.amount}</Text> to <Text style={{ color: '#f98935' }}>@{t.recipient.username}</Text>
+                </Text>
+                <Text style={{ color: 'gray', fontSize: 12 }}>{new Date(t.timestamp).toLocaleString()}</Text>
+              </View>
+            ))
+          )}
+        </View>
+        <Text style={{ color: 'black', marginBottom: 5 }}>Send Amount</Text>
       </View>
     </>
   );

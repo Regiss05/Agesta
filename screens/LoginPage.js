@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { API_URL } from '@env';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import ViewShot from 'react-native-view-shot';
 import axios from 'axios';
@@ -12,7 +13,7 @@ const LoginPage = ({ route, navigation }) => {
 
 
   const handleSubmit = async () => {
-    const endpoint = isSignup ? 'http://localhost:5000/api/auth/signup' : 'http://localhost:5000/api/auth/login';
+    const endpoint = isSignup ? `${API_URL}/api/auth/signup` : `${API_URL}/api/auth/login`;
   
     if (!username || !password) {
       Alert.alert('Error', 'Please fill in all fields');
